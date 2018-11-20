@@ -1,0 +1,14 @@
+*.o 
+*.bin
+/.git
+/.svn
+*.d
+*.buf
+*.fw
+*.app
+*.map
+/.fonts/
+/vim81/bundle/
+cscope.out
+tags
+filenametags
