@@ -2,6 +2,7 @@
 #include <s3c2410.h>
 
 #define BUSY            1
+#define BOOT_RAM_EN     1
 
 #define NAND_SECTOR_SIZE    512
 #define NAND_BLOCK_MASK     (NAND_SECTOR_SIZE - 1)
@@ -446,12 +447,36 @@ int bBootFrmNORFlash(void)
         return 0;
     }
 }
+#if BOOT_RAM_EN
+int bBootFrmRAM(unsigned long start_addr)
+{
+    //在RAM的范围
+   if((start_addr>0x30000000)&&(start_addr<0x34000000)){
+       return 0 
+   }
+   return 1; 
+}
+#endif
 
 int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
 {
     unsigned int *pdwDest;
     unsigned int *pdwSrc;
     int i;
+
+
+#if BOOT_RAM_EN
+    if(bBootFrmRAM(start_addr) == 0){
+        pdwDest = (unsigned int *)buf;
+        pdwSrc  = (unsigned int *)start_addr;
+        /* 从 RAM拷贝数据 */
+        for (i = 0; i < size / 4; i++)
+        {
+            pdwDest[i] = pdwSrc[i];
+        }
+        return 0;
+    }
+#endif
 
     if (bBootFrmNORFlash())
     {
