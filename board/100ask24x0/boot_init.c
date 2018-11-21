@@ -452,7 +452,7 @@ int bBootFrmRAM(unsigned long start_addr)
 {
     //ÔÚRAMµÄ·¶Î§
    if((start_addr>0x30000000)&&(start_addr<0x34000000)){
-       return 0 
+       return 0; 
    }
    return 1; 
 }

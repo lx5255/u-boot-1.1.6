@@ -71,6 +71,8 @@ ifeq ("$(origin O)", "command line")
 BUILD_DIR := $(O)
 endif
 endif
+BUILD_DIR = $(CURDIR)/output/
+# BUILD_DIR = 
 
 ifneq ($(BUILD_DIR),)
 saved-output := $(BUILD_DIR)
@@ -247,6 +249,7 @@ $(obj)u-boot.srec:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O srec $< $@
 
 $(obj)u-boot.bin:	$(obj)u-boot
+		echo $(BUILD_DIR)
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 
 $(obj)u-boot.img:	$(obj)u-boot.bin
