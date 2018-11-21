@@ -87,6 +87,7 @@ static inline S3C24X0_LCD * S3C24X0_GetBase_LCD(void)
 {
 	return (S3C24X0_LCD * const)S3C24X0_LCD_BASE;
 }
+
 static inline S3C24X0_UART * S3C24X0_GetBase_UART(S3C24X0_UARTS_NR nr)
 {
 	return (S3C24X0_UART * const)(S3C24X0_UART_BASE + (nr * 0x4000));

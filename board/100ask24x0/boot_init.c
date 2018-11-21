@@ -3,12 +3,23 @@
 
 #define BUSY            1
 #define BOOT_RAM_EN     1
+#define BOOT_UART        1
 
 #define NAND_SECTOR_SIZE    512
 #define NAND_BLOCK_MASK     (NAND_SECTOR_SIZE - 1)
 
 #define NAND_SECTOR_SIZE_LP    2048
 #define NAND_BLOCK_MASK_LP     (NAND_SECTOR_SIZE_LP - 1)
+
+#if BOOT_UART 
+extern void serial_puts(const char *s);
+extern void serial_setbrg(void);
+#define uart_init   serial_setbrg 
+#define boot_puts   serial_puts
+#else
+#define uart_init(...)
+#define boot_puts(...)
+#endif
 
 /* 供外部调用的函数 */
 void nand_init_ll(void);
@@ -464,6 +475,8 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
     unsigned int *pdwSrc;
     int i;
 
+    uart_init();
+    puts("CopyCode2Ram\n");
 
 #if BOOT_RAM_EN
     if(bBootFrmRAM(start_addr) == 0){

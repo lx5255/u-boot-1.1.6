@@ -33,6 +33,8 @@ static struct serial_device *serial_devices = NULL;
 static struct serial_device *serial_current = NULL;
 
 #ifndef CONFIG_LWMON
+
+
 struct serial_device *default_serial_console (void)
 {
 #if defined(CONFIG_8xx_CONS_SMC1) || defined(CONFIG_8xx_CONS_SMC2)
@@ -169,6 +171,7 @@ int serial_init (void)
 
 	return serial_current->init ();
 }
+
 
 void serial_setbrg (void)
 {

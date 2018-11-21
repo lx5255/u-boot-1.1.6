@@ -33,7 +33,8 @@ SECTIONS
 	.text      :
 	{
 	  cpu/arm920t/start.o	(.text)
-          board/100ask24x0/boot_init.o (.text)
+      board/100ask24x0/boot_init.o (.text)
+      *(.boot_ram)
 	  *(.text)
 	}
 
