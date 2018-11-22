@@ -48,7 +48,6 @@ DECLARE_GLOBAL_DATA_PTR;
 #error "Bad: you didn't configure serial ..."
 #endif
 
-__attribute__((section(".boot_ram")))
 void serial_setbrg (void)
 {
 	S3C24X0_UART * const uart = S3C24X0_GetBase_UART(UART_NR);
@@ -141,7 +140,6 @@ void enable_putc(void)
 /*
  * Output a single byte to the serial port.
  */
-__attribute__((section(".boot_ram")))
 void serial_putc (const char c)
 {
 	S3C24X0_UART * const uart = S3C24X0_GetBase_UART(UART_NR);
@@ -177,7 +175,6 @@ int serial_tstc (void)
 }
 
 
-__attribute__((section(".boot_ram")))
 void
 serial_puts (const char *s)
 {

@@ -12,10 +12,10 @@
 #define NAND_BLOCK_MASK_LP     (NAND_SECTOR_SIZE_LP - 1)
 
 #if BOOT_UART 
-extern void serial_puts(const char *s);
-extern void serial_setbrg(void);
-#define uart_init   serial_setbrg 
-#define boot_puts   serial_puts
+extern void s3c2440_uart_init(void);
+extern void s3c2440_uart_puts(char *s);
+#define uart_init   s3c2440_uart_init
+#define boot_puts   s3c2440_uart_puts
 #else
 #define uart_init(...)
 #define boot_puts(...)
@@ -469,6 +469,7 @@ int bBootFrmRAM(unsigned long start_addr)
 }
 #endif
 
+const char str1[] = "CopyCode2Ram\n";
 int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
 {
     unsigned int *pdwDest;
@@ -476,7 +477,7 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
     int i;
 
     uart_init();
-    puts("CopyCode2Ram\n");
+    boot_puts(str1);
 
 #if BOOT_RAM_EN
     if(bBootFrmRAM(start_addr) == 0){
