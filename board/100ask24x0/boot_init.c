@@ -41,6 +41,25 @@ static void s3c2440_write_cmd(int cmd);
 static void s3c2440_write_addr(unsigned int addr);
 static unsigned char s3c2440_read_data(void);
 
+#define GPBCON      (*(volatile unsigned long *)0x56000010)
+#define GPBDAT      (*(volatile unsigned long *)0x56000014)
+#define BIT(x)      (1<<x)
+
+static void led_on()
+{
+   GPBCON &= ~(0x3<<10);
+   GPBCON |= BIT(10);
+   GPBDAT &= ~BIT(5);    // GPB5输出0，LED1点亮 
+}
+
+static void led_off()
+{
+   GPBCON &= ~(0x3<<10);
+   GPBCON |= BIT(10);
+   GPBDAT |= BIT(5);    // GPB5输出1，LED1熄灭 
+}
+
+
 /* S3C2410的NAND Flash操作函数 */
 
 /* 复位 */
