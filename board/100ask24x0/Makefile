@@ -25,7 +25,7 @@ include $(TOPDIR)/config.mk
 
 LIB	= $(obj)lib$(BOARD).a
 
-COBJS	:= 100ask24x0.o boot_init.o
+COBJS	:= 100ask24x0.o boot_init.o uart.o
 SOBJS	:= lowlevel_init.o
 
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)

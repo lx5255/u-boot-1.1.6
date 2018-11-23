@@ -30,11 +30,18 @@ SECTIONS
 	. = 0x00000000;
 
 	. = ALIGN(4);
+	.boot_text      :
+	{
+	}
+	. = ALIGN(4);
 	.text      :
 	{
-	  cpu/arm920t/start.o	(.text)
+      cpu/arm920t/start.o	(.text)
       board/100ask24x0/boot_init.o (.text)
-      *(.boot_ram)
+      board/100ask24x0/boot_init.o (.rodata)
+      board/100ask24x0/boot_init.o (.COMMON)
+      board/100ask24x0/uart.o (.text)
+	  *(.boot_ram)
 	  *(.text)
 	}
 

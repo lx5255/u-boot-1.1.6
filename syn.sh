@@ -27,7 +27,7 @@ export ct_filter_path="\
 export ct_file_format='.*\.\(c\|h\|s\|S\|ld\|lds\|s51\)'
 
 # for filenametags
-export lookup_file_format='.*\.\(c\|h\|s\|S\|ld\|lds\|s51\|lst\|map\)'
+export lookup_file_format='.*\.\(c\|h\|s\|S\|ld\|lds\|s51\|dis\|map\)'
 
 rm tags cscope.out filenametags
 # for tags
