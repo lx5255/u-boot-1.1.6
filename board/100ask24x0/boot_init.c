@@ -3,7 +3,7 @@
 
 #define BUSY            1
 #define BOOT_RAM_EN     1
-#define BOOT_UART        1
+#define BOOT_UART       0 
 
 #define NAND_SECTOR_SIZE    512
 #define NAND_BLOCK_MASK     (NAND_SECTOR_SIZE - 1)
@@ -462,7 +462,7 @@ int bBootFrmNORFlash(void)
 int bBootFrmRAM(unsigned long start_addr)
 {
     //ÔÚRAMµÄ·¶Î§
-   if((start_addr>0x30000000)&&(start_addr<0x34000000)){
+   if((start_addr>=0x30000000)&&(start_addr<0x34000000)){
        return 0; 
    }
    return 1; 
@@ -476,7 +476,7 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
     int i;
 
     uart_init();
-    puts("CopyCode2Ram\n");
+    boot_puts("CopyCode2Ram\n");
 
 #if BOOT_RAM_EN
     if(bBootFrmRAM(start_addr) == 0){
