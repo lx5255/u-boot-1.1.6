@@ -14,8 +14,10 @@
 #if BOOT_UART 
 extern void s3c2440_uart_init(void);
 extern void s3c2440_uart_puts(char *s);
+extern void s3c2440_uart_putc(unsigned char c);
 #define uart_init   s3c2440_uart_init
 #define boot_puts   s3c2440_uart_puts
+#define boot_putc   s3c2440_uart_putc
 #else
 #define uart_init(...)
 #define boot_puts(...)
@@ -51,6 +53,25 @@ static void s3c2440_nand_deselect_chip(void);
 static void s3c2440_write_cmd(int cmd);
 static void s3c2440_write_addr(unsigned int addr);
 static unsigned char s3c2440_read_data(void);
+
+#define GPBCON      (*(volatile unsigned long *)0x56000050)
+#define GPBDAT      (*(volatile unsigned long *)0x56000054)
+#define BIT(x)      (1<<x)
+
+static void led_on()
+{
+   GPBCON &= ~(0x3<<10);
+   GPBCON |= BIT(10);
+   GPBDAT &= ~BIT(5);    // GPB5输出0，LED1点亮 
+}
+
+static void led_off()
+{
+   GPBCON &= ~(0x3<<10);
+   GPBCON |= BIT(10);
+   GPBDAT |= BIT(5);    // GPB5输出1，LED1熄灭 
+}
+
 
 /* S3C2410的NAND Flash操作函数 */
 
@@ -477,10 +498,18 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
     int i;
 
     uart_init();
-    boot_puts(str1);
-
+    /* boot_puts(str1); */
+    boot_putc('1');
+    boot_putc('2');
+    boot_putc('1');
+        /* while(1){ */
+    /* boot_putc(0x55); */
+    /* boot_putc('2'); */
+    /* boot_putc(0xaa); */
+    /* } */
 #if BOOT_RAM_EN
     if(bBootFrmRAM(start_addr) == 0){
+    boot_putc('2');
         pdwDest = (unsigned int *)buf;
         pdwSrc  = (unsigned int *)start_addr;
         /* 从 RAM拷贝数据 */
@@ -488,6 +517,7 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
         {
             pdwDest[i] = pdwSrc[i];
         }
+        boot_putc('3');
         return 0;
     }
 #endif
@@ -599,7 +629,8 @@ void clock_init(void)
         clk_power->MPLLCON = S3C2440_MPLL_400MHZ;
 
         /* some delay between MPLL and UPLL */
-        delay (8000);
+        delay (80000);
+        led_off();
     }
 }
 

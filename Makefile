@@ -238,7 +238,7 @@ __LIBS := $(subst $(obj),,$(LIBS))
 #########################################################################
 #########################################################################
 
-ALL = $(obj)u-boot.srec $(obj)u-boot.bin $(obj)System.map $(obj)u-boot.dis $(U_BOOT_NAND)
+ALL = $(obj)u-boot.srec $(obj)u-boot.bin $(obj)System.map $(obj)u-boot.dis  $(U_BOOT_NAND)
 
 all:		$(ALL)
 

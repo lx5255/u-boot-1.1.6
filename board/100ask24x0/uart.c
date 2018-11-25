@@ -16,9 +16,9 @@
 #define TXD0READY   (1<<2)
 #define RXD0READY   (1)
 
-#define PCLK            50000000    // 
+#define PCLK            50000000L    // 
 #define UART_CLK        PCLK        //  UART0的时钟源设为PCLK
-#define UART_BAUD_RATE  115200        // 波特率
+#define UART_BAUD_RATE  115200L        // 波特率
 #define UART_BRD        ((UART_CLK  / (UART_BAUD_RATE * 16)) - 1)
 
 /*
@@ -27,8 +27,13 @@
  */
 void s3c2440_uart_init(void)
 {
-    GPHCON  |= 0xa0;    // GPH2,GPH3用作TXD0,RXD0
-    GPHUP   = 0x0c;     // GPH2,GPH3内部上拉
+    /* GPHCON  |= 0xa0;    // GPH2,GPH3用作TXD0,RXD0 */
+    /* GPHUP   = 0x0c;     // GPH2,GPH3内部上拉 */
+
+		GPHCON &= ~(0xf<<(4)); //配置IO
+		GPHCON |= 0xa<<(4);
+        GPHUP   = 0x0c;     // GPH2,GPH3内部上拉
+
 
     ULCON0  = 0x03;     // 8N1(8个数据位，无较验，1个停止位)
     UCON0   = 0x05;     // 查询方式，UART时钟源为PCLK
@@ -42,16 +47,15 @@ void s3c2440_uart_init(void)
  */
 void s3c2440_uart_putc(unsigned char c)
 {
-    /* 等待，直到发送缓冲区中的数据已经全部发送出去 */
-    while (!(UTRSTAT0 & TXD0READY));
-
     /* 向UTXH0寄存器中写入数据，UART即自动将它发送出去 */
     UTXH0 = c;
+    /* 等待，直到发送缓冲区中的数据已经全部发送出去 */
+    while (!(UTRSTAT0 & TXD0READY));
 }
 
 void s3c2440_uart_puts(char *s)
 {
-   while(*s){  
+   while(*s != '\0'){  
         s3c2440_uart_putc(*s);
    }
 }

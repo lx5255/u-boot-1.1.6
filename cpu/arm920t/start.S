@@ -171,11 +171,13 @@ reset:
 	 * we do sys-critical inits only at reboot,
 	 * not when booting from ram!
 	 */
+#if 0
 #ifndef CONFIG_SKIP_LOWLEVEL_INIT
 	adr	r0, _start		/* r0 <- current position of code   */
 	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
 	cmp     r0, r1                  /* don't reloc during debug         */
 	blne	cpu_init_crit
+#endif
 #endif
 
 	/* Set up the stack						    */
