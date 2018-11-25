@@ -56,8 +56,29 @@ void s3c2440_uart_putc(unsigned char c)
 void s3c2440_uart_puts(char *s)
 {
    while(*s != '\0'){  
-        s3c2440_uart_putc(*s);
+        s3c2440_uart_putc(*s++);
    }
+}
+
+void s3c2440_put_u32(int value)
+{
+    int i, ch;
+    s3c2440_uart_putc( '0');
+    s3c2440_uart_putc( 'x');
+    i = 8;
+    do{
+        i--;
+        ch = (value>>i*4)&0xf;
+        if(ch<10)
+        {
+            s3c2440_uart_putc('0'+ch);
+        }
+        else
+        {
+            s3c2440_uart_putc('a'+ch-10);
+        }
+    }while(i);
+    s3c2440_uart_putc(' ');
 }
 /*
  * 接收字符

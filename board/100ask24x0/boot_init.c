@@ -490,7 +490,11 @@ int bBootFrmRAM(unsigned long start_addr)
 }
 #endif
 
+#define WTCON     (*((volatile unsigned long *)0x53000000))
+#define WTDAT     (*((volatile unsigned long *)0x53000004))
+#define WTCNT     (*((volatile unsigned long *)0x53000008))
 const char str1[] = "CopyCode2Ram\n";
+extern void s3c2440_put_u32(int value);
 int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
 {
     unsigned int *pdwDest;
@@ -507,6 +511,9 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
     /* boot_putc('2'); */
     /* boot_putc(0xaa); */
     /* } */
+    s3c2440_put_u32(start_addr);
+    s3c2440_put_u32(buf);
+    s3c2440_put_u32(size);
 #if BOOT_RAM_EN
     if(bBootFrmRAM(start_addr) == 0){
     boot_putc('2');
@@ -518,6 +525,8 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
             pdwDest[i] = pdwSrc[i];
         }
         boot_putc('3');
+        WTCON = 0x9c3d; 
+        WTDAT = 40000; 
         return 0;
     }
 #endif

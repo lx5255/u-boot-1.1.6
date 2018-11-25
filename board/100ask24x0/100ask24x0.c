@@ -36,8 +36,10 @@ DECLARE_GLOBAL_DATA_PTR;
 
 int board_init (void)
 {
+
     S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
     S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
+
 
     /* set up the I/O ports */
     gpio->GPACON = 0x007FFFFF;

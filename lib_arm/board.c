@@ -233,6 +233,9 @@ init_fnc_t *init_sequence[] = {
 	NULL,
 };
 
+
+extern void s3c2440_uart_putc(unsigned char c);
+extern void s3c2440_put_u32(u32 value);
 void start_armboot (void)
 {
 	init_fnc_t **init_fnc_ptr;
@@ -244,23 +247,42 @@ void start_armboot (void)
 	unsigned long addr;
 #endif
 
+    s3c2440_uart_putc('4');
+    s3c2440_put_u32(_armboot_start);
 	/* Pointer is writable since we allocated a register for it */
+    s3c2440_put_u32(CFG_MALLOC_LEN);
+    s3c2440_put_u32(sizeof(gd_t));
 	gd = (gd_t*)(_armboot_start - CFG_MALLOC_LEN - sizeof(gd_t));
+    s3c2440_put_u32(gd);
 	/* compiler optimization barrier needed for GCC >= 3.4 */
 	__asm__ __volatile__("": : :"memory");
 
-	memset ((void*)gd, 0, sizeof (gd_t));
-	gd->bd = (bd_t*)((char*)gd - sizeof(bd_t));
-	memset (gd->bd, 0, sizeof (bd_t));
 
+    s3c2440_uart_putc('5');
+	memset ((void*)gd, 0, sizeof (gd_t));
+    s3c2440_uart_putc('6');
+	gd->bd = (bd_t*)((char*)gd - sizeof(bd_t));
+    s3c2440_uart_putc('7');
+	memset (gd->bd, 0, sizeof (bd_t));
+    s3c2440_uart_putc('8');
 	monitor_flash_len = _bss_start - _armboot_start;
 
+    s3c2440_put_u32(init_sequence);
 	for (init_fnc_ptr = init_sequence; *init_fnc_ptr; ++init_fnc_ptr) {
+        if(!((int)(*init_fnc_ptr)&0x03)){
+            s3c2440_uart_putc('a');
+            s3c2440_put_u32((*init_fnc_ptr));
+        }else{
+            s3c2440_uart_putc('n');
+        }
 		if ((*init_fnc_ptr)() != 0) {
+        s3c2440_uart_putc('e');
 			hang ();
 		}
 	}
 
+
+    /* s3c2440_uart_putc('5'); */
 #ifndef CFG_NO_FLASH
 	/* configure available FLASH banks */
 	size = flash_init ();
@@ -293,6 +315,8 @@ void start_armboot (void)
 	gd->fb_base = addr;
 #endif /* CONFIG_LCD */
 
+
+    /* s3c2440_uart_putc('6'); */
 	/* armboot_start is defined in the board-specific linker script */
 	mem_malloc_init (_armboot_start - CFG_MALLOC_LEN);
 
@@ -345,6 +369,7 @@ void start_armboot (void)
 #endif
 	}
 
+
 	devices_init ();	/* get the devices list going. */
 
 #ifdef CONFIG_CMC_PU2
@@ -355,6 +380,7 @@ void start_armboot (void)
 
 	console_init_r ();	/* fully init console as a device */
 
+    /* s3c2440_uart_putc('7'); */
 #if defined(CONFIG_MISC_INIT_R)
 	/* miscellaneous platform dependent initialisations */
 	misc_init_r ();
@@ -398,6 +424,8 @@ void start_armboot (void)
 #endif
 	eth_initialize(gd->bd);
 #endif
+
+    /* s3c2440_uart_putc('8'); */
 	/* main_loop() can return to retry autoboot, if so just run it again. */
 	for (;;) {
 		main_loop ();

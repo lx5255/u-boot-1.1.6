@@ -93,6 +93,8 @@ int cpu_init (void)
 	/*
 	 * setup up stacks if necessary
 	 */
+
+    s3c2440_uart_putc('b');
 #ifdef CONFIG_USE_IRQ
 	IRQ_STACK_START = _armboot_start - CFG_MALLOC_LEN - CFG_GBL_DATA_SIZE - 4;
 	FIQ_STACK_START = IRQ_STACK_START - CONFIG_STACKSIZE_IRQ;
@@ -102,6 +104,7 @@ int cpu_init (void)
     FREE_RAM_END = _armboot_start - CFG_MALLOC_LEN - CFG_GBL_DATA_SIZE - 4 - CONFIG_STACKSIZE;
     FREE_RAM_SIZE = FREE_RAM_END - PHYS_SDRAM_1;
 #endif
+    s3c2440_uart_putc('c');
 	return 0;
 }
 

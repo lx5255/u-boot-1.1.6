@@ -117,8 +117,10 @@ void show_regs (struct pt_regs *regs)
 		thumb_mode (regs) ? " (T)" : "");
 }
 
+extern void s3c2440_uart_putc(unsigned char c);
 void do_undefined_instruction (struct pt_regs *pt_regs)
 {
+    s3c2440_uart_putc('i');
 	printf ("undefined instruction\n");
 	show_regs (pt_regs);
 	bad_mode ();
@@ -133,6 +135,8 @@ void do_software_interrupt (struct pt_regs *pt_regs)
 
 void do_prefetch_abort (struct pt_regs *pt_regs)
 {
+
+    s3c2440_uart_putc('a');
 	printf ("prefetch abort\n");
 	show_regs (pt_regs);
 	bad_mode ();
@@ -140,6 +144,7 @@ void do_prefetch_abort (struct pt_regs *pt_regs)
 
 void do_data_abort (struct pt_regs *pt_regs)
 {
+    s3c2440_uart_putc('a');
 	printf ("data abort\n");
 	show_regs (pt_regs);
 	bad_mode ();
@@ -167,6 +172,7 @@ void do_irq (struct pt_regs *pt_regs)
 	/* integratorap.c                   */
 	*(volatile ulong *)(CFG_TIMERBASE + 0x0C) = 0;
 #else
+    s3c2440_uart_putc('r');
 	printf ("interrupt request\n");
 	show_regs (pt_regs);
 	bad_mode ();

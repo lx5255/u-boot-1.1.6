@@ -29,6 +29,8 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+
+#define DEBUG   1 
 /*
  * High Level Configuration Options
  * (easy to change)
