@@ -171,7 +171,7 @@ reset:
 	 * we do sys-critical inits only at reboot,
 	 * not when booting from ram!
 	 */
-#if 0
+#if  1 
 #ifndef CONFIG_SKIP_LOWLEVEL_INIT
 	adr	r0, _start		/* r0 <- current position of code   */
 	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */

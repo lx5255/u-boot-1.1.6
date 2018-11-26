@@ -251,7 +251,8 @@ $(obj)u-boot.srec:	$(obj)u-boot
 $(obj)u-boot.bin:	$(obj)u-boot
 		echo $(BUILD_DIR)
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-		cp $(obj)u-boot.bin  /tftpboot/ 
+		cp make_after.sh $(obj) 
+		cd $(obj) && bash make_after.sh
 
 $(obj)u-boot.img:	$(obj)u-boot.bin
 		./tools/mkimage -A $(ARCH) -T firmware -C none \
