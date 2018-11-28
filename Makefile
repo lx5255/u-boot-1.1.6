@@ -242,6 +242,10 @@ ALL = $(obj)u-boot.srec $(obj)u-boot.bin $(obj)System.map $(obj)u-boot.dis  $(U_
 
 all:		$(ALL)
 
+st:
+		cp make_after.sh $(obj) 
+		cd $(obj) && bash make_after.sh
+
 $(obj)u-boot.hex:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O ihex $< $@
 
@@ -251,8 +255,6 @@ $(obj)u-boot.srec:	$(obj)u-boot
 $(obj)u-boot.bin:	$(obj)u-boot
 		echo $(BUILD_DIR)
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-		cp make_after.sh $(obj) 
-		cd $(obj) && bash make_after.sh
 
 $(obj)u-boot.img:	$(obj)u-boot.bin
 		./tools/mkimage -A $(ARCH) -T firmware -C none \
@@ -260,6 +262,7 @@ $(obj)u-boot.img:	$(obj)u-boot.bin
 		-n $(shell sed -n -e 's/.*U_BOOT_VERSION//p' $(VERSION_FILE) | \
 			sed -e 's/"[	 ]*$$/ for $(BOARD) board"/') \
 		-d $< $@
+
 $(obj)u-boot.dis:	$(obj)u-boot
 		$(OBJDUMP) -d $< > $@
 

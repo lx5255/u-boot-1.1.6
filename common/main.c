@@ -342,7 +342,7 @@ void main_loop (void)
 	bootlimit = bcs ? simple_strtoul (bcs, NULL, 10) : 0;
 #endif /* CONFIG_BOOTCOUNT_LIMIT */
 
-#ifdef CONFIG_MODEM_SUPPORT
+#ifdef CONFIG_MODEM_SUPPORT //0
 	debug ("DEBUG: main_loop:   do_mdm_init=%d\n", do_mdm_init);
 	if (do_mdm_init) {
 		char *str = strdup(getenv("mdm_cmd"));
@@ -373,10 +373,12 @@ void main_loop (void)
     extern int mtdparts_init(void);
     if (!getenv("mtdparts"))
     {
+	    debug ("### %s %d\n\n", __func__, __LINE__);
         run_command("mtdparts default", 0);
     }
     else
     {
+	    debug ("### %s %d\n\n", __func__, __LINE__);
         mtdparts_init();
     }
 #endif

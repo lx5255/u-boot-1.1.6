@@ -387,6 +387,7 @@ void start_armboot (void)
 #endif
 
 	Port_Init();
+    printf("PreLoadedONRAM %d\n", PreLoadedONRAM);
 	if (!PreLoadedONRAM) {
 		/* enable exceptions */
 		enable_interrupts ();
@@ -426,6 +427,7 @@ void start_armboot (void)
 #endif
 
     /* s3c2440_uart_putc('8'); */
+	puts ("main_loop\n");
 	/* main_loop() can return to retry autoboot, if so just run it again. */
 	for (;;) {
 		main_loop ();

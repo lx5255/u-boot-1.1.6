@@ -234,6 +234,8 @@ SetLoadFlag:
 	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
 	cmp     r0, r1                  /* don't reloc during debug         */
 	ldr r2, =PreLoadedONRAM
+	mov r3, #10
+	str r3, [r2]
 	mov r3, #1
 	streq r3, [r2]
 
