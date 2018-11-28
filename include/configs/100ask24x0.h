@@ -237,4 +237,6 @@
 #define CFG_MAX_NAND_DEVICE     1
 #define NAND_MAX_CHIPS          1
 
+#define CONFIG_AUTO_COMPLETE
+
 #endif	/* __CONFIG_H */

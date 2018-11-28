@@ -532,6 +532,7 @@ PROMPT:
 			rc = run_command (lastcommand, flag);
 
 		if (rc <= 0) {
+			puts ("invalid command\n");
 			/* invalid command or not repeatable, forget it */
 			lastcommand[0] = 0;
 		}
@@ -985,6 +986,7 @@ int readline (const char *const prompt)
 	int	plen = 0;			/* prompt length	*/
 	int	col;				/* output column cnt	*/
 	char	c;
+    int extern_c = 0;
 
 	/* print prompt */
 	if (prompt) {
@@ -1009,7 +1011,13 @@ int readline (const char *const prompt)
 		}
 #endif
 		c = getc();
-
+        if(c == 0x5b){
+            if(extern_c == 1){
+                extern_c = 2;
+			    continue;
+            }
+            extern_c = 0; 
+        }    
 		/*
 		 * Special character handling
 		 */
@@ -1038,12 +1046,12 @@ int readline (const char *const prompt)
 
 
         case 37:  //上方向键。
-		    puts ("\r");
-		    puts (prompt);
-			strcpy (console_buffer, lastcommand);
-            n = strlen(console_buffer);
-            p = console_buffer + n; 
-		    puts (console_buffer);
+		    /* puts ("\r"); */
+		    /* puts (prompt); */
+			/* strcpy (console_buffer, lastcommand); */
+            /* n = strlen(console_buffer); */
+            /* p = console_buffer + n;  */
+		    /* puts (console_buffer); */
 			continue;
 
 		case 0x17:				/* ^W - erase word 	*/
@@ -1057,11 +1065,28 @@ int readline (const char *const prompt)
 		case 0x7F:				/* DEL - backspace	*/
 			p=delete_char(console_buffer, p, &col, &n, plen);
 			continue;
-
+        case 0x1b:
+            extern_c =1;
+			/* puts ("-1"); */
+			continue;
+       case 0x41:
+			/* puts ("-1"); */
+            if(extern_c == 2){
+                extern_c = 0; 
+                puts ("\r");
+                puts (prompt);
+                /* puts (lastcommand); */
+                strcpy (console_buffer, lastcommand);
+                n = strlen(console_buffer);
+                p = console_buffer + n; 
+                puts (console_buffer);
+                continue;
+            }
 		default:
 			/*
 			 * Must be a normal character then
 			 */
+            extern_c = 0; 
 			if (n < CFG_CBSIZE-2) {
 				if (c == '\t') {	/* expand TABs		*/
 #ifdef CONFIG_AUTO_COMPLETE
