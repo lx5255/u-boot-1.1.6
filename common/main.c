@@ -221,6 +221,7 @@ static int menukey = 0;
 static __inline__ int abortboot(int bootdelay)
 {
 	int abort = 0;
+	    debug ("### %s %d\n\n", __func__, __LINE__);
 
 #ifdef CONFIG_SILENT_CONSOLE
 	if (gd->flags & GD_FLG_SILENT) {
@@ -229,7 +230,7 @@ static __inline__ int abortboot(int bootdelay)
 		console_assign (stderr, "serial");
 	}
 #endif
-
+	    debug ("### %s %d\n\n", __func__, __LINE__);
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT, bootdelay);
 #else
@@ -298,13 +299,14 @@ static __inline__ int abortboot(int bootdelay)
 
 /****************************************************************************/
 
+char lastcommand[CFG_CBSIZE] = { 0, };
 void main_loop (void)
 {
 #ifndef CFG_HUSH_PARSER
-	static char lastcommand[CFG_CBSIZE] = { 0, };
 	int len;
 	int rc = 1;
 	int flag;
+    memset(lastcommand, 0, sizeof(lastcommand));
 #endif
 
 #if defined(CONFIG_BOOTDELAY) && (CONFIG_BOOTDELAY >= 0)
@@ -440,6 +442,7 @@ void main_loop (void)
 		int prev = disable_ctrlc(1);	/* disable Control C checking */
 # endif
 
+	    debug ("### %s %d\n\n", __func__, __LINE__);
 # ifndef CFG_HUSH_PARSER
         {
             printf("Booting Linux ...\n");            
@@ -455,6 +458,8 @@ void main_loop (void)
 # endif
 	}
 
+
+	    debug ("### %s %d\n\n", __func__, __LINE__);
 # ifdef CONFIG_MENUKEY
 	if (menukey == CONFIG_MENUKEY) {
 	    s = getenv("menucmd");
@@ -467,6 +472,8 @@ void main_loop (void)
 # endif
 	    }
 	}
+
+	    debug ("### %s %d\n\n", __func__, __LINE__);
 #endif /* CONFIG_MENUKEY */
 #endif	/* CONFIG_BOOTDELAY */
 
@@ -477,6 +484,7 @@ void main_loop (void)
 	}
 #endif
 
+	    debug ("### %s %d\n\n", __func__, __LINE__);
     run_command("menu", 0);
 	/*
 	 * Main Loop for Monitor Command Processing
@@ -501,8 +509,9 @@ PROMPT:
 		flag = 0;	/* assume no special flags for now */
 		if (len > 0)
 			strcpy (lastcommand, console_buffer);
-		else if (len == 0)
-			flag |= CMD_FLAG_REPEAT;
+		else if (len == 0){
+			/* flag |= CMD_FLAG_REPEAT; */
+        }
 #ifdef CONFIG_BOOT_RETRY_TIME
 		else if (len == -2) {
 			/* -2 means timed out, retry autoboot
@@ -952,6 +961,7 @@ static int cread_line(char *buf, unsigned int *len)
  *		-1 if break
  *		-2 if timed out
  */
+extern char lastcommand[];
 int readline (const char *const prompt)
 {
 #ifdef CONFIG_CMDLINE_EDITING
@@ -1024,6 +1034,16 @@ int readline (const char *const prompt)
 			}
 			p = console_buffer;
 			n = 0;
+			continue;
+
+
+        case 37:  //上方向键。
+		    puts ("\r");
+		    puts (prompt);
+			strcpy (console_buffer, lastcommand);
+            n = strlen(console_buffer);
+            p = console_buffer + n; 
+		    puts (console_buffer);
 			continue;
 
 		case 0x17:				/* ^W - erase word 	*/

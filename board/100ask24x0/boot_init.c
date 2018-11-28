@@ -523,10 +523,14 @@ int CopyCode2Ram(unsigned long start_addr, unsigned char *buf, int size)
         for (i = 0; i < size / 4; i++)
         {
             pdwDest[i] = pdwSrc[i];
+            /* pdwDest[i] = pdwSrc[i]; */
+            /* pdwDest[i] = pdwSrc[i]; */
         }
         boot_putc('3');
-        WTCON = 0x9c3d; 
-        WTDAT = 40000; 
+        /* WTCON = 0x9c3d;  */
+        /* WTDAT = 40000;  */
+        /* __asm__ volatile("mov %0, pc":"=r"(start_addr));  */
+        /* s3c2440_put_u32(start_addr); */
         return 0;
     }
 #endif

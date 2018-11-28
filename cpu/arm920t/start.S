@@ -79,6 +79,7 @@ _TEXT_BASE:
 _armboot_start:
 	.word _start
 
+.globl s3c2440_put_u32
 /*
  * These are defined in the board-specific linker script.
  */
@@ -219,6 +220,8 @@ copy_loop:
 #endif	/* CONFIG_SKIP_RELOCATE_UBOOT */
 
 clear_bss:
+    mov r0, pc
+    bl s3c2440_put_u32
 	ldr	r0, _bss_start		/* find start of bss segment        */
 	ldr	r1, _bss_end		/* stop here                        */
 	mov 	r2, #0x00000000		/* clear                            */
@@ -227,6 +230,11 @@ clbss_l:str	r2, [r0]		/* clear loop...                    */
 	add	r0, r0, #4
 	cmp	r0, r1
 	ble	clbss_l
+	ldr r2, =PreLoadedONRAM
+	mov r3, #0
+	str r3, [r2]
+
+
 
 SetLoadFlag:
 	/* Set a global flag, PreLoadedONRAM */
@@ -234,10 +242,9 @@ SetLoadFlag:
 	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
 	cmp     r0, r1                  /* don't reloc during debug         */
 	ldr r2, =PreLoadedONRAM
-	mov r3, #10
-	str r3, [r2]
 	mov r3, #1
 	streq r3, [r2]
+    bl s3c2440_put_u32
 
 #if 0
 	/* try doing this stuff after the relocation */
